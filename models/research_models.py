@@ -46,15 +46,6 @@ class ResearchReport(BaseModel):
     validation_result: Optional[ValidationResult] = Field(None, description="Content validation results")
 
 
-class AgentStatus(BaseModel):
-    """Model for agent status and progress"""
-    agent_name: str = Field(..., description="Name of the agent")
-    status: Literal["idle", "running", "completed", "error"] = Field(..., description="Current status")
-    progress: float = Field(default=0.0, ge=0.0, le=1.0, description="Progress percentage")
-    message: str = Field(default="", description="Status message")
-    timestamp: datetime = Field(default_factory=datetime.now, description="Status timestamp")
-
-
 class ResearchRequest(BaseModel):
     """Model for a research request"""
     query: str = Field(..., description="The user's research query")
@@ -62,31 +53,3 @@ class ResearchRequest(BaseModel):
     max_searches: int = Field(default=2, ge=1, le=5, description="Maximum number of searches")
     include_validation: bool = Field(default=True, description="Whether to include content validation")
     created_at: datetime = Field(default_factory=datetime.now, description="When the request was created")
-
-
-class ResearchResponse(BaseModel):
-    """Model for the research response"""
-    request: ResearchRequest = Field(..., description="The original request")
-    report: ResearchReport = Field(..., description="The generated report")
-    agent_statuses: List[AgentStatus] = Field(default_factory=list, description="Status of all agents")
-    total_processing_time: float = Field(default=0.0, description="Total processing time in seconds")
-    success: bool = Field(..., description="Whether the research was successful")
-    error_message: Optional[str] = Field(None, description="Error message if failed")
-
-
-class AgentTool(BaseModel):
-    """Model for agent tools"""
-    name: str = Field(..., description="Tool name")
-    description: str = Field(..., description="Tool description")
-    input_schema: Dict[str, Any] = Field(..., description="Input schema for the tool")
-    output_schema: Dict[str, Any] = Field(..., description="Output schema for the tool")
-    is_async: bool = Field(default=True, description="Whether the tool is async")
-
-
-class TraceEvent(BaseModel):
-    """Model for OpenAI tracing events"""
-    event_type: str = Field(..., description="Type of trace event")
-    agent_name: str = Field(..., description="Name of the agent")
-    timestamp: datetime = Field(default_factory=datetime.now, description="Event timestamp")
-    data: Dict[str, Any] = Field(default_factory=dict, description="Event data")
-    duration: Optional[float] = Field(None, description="Event duration in seconds")

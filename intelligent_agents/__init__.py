@@ -3,15 +3,20 @@ from .agent import Agent
 from .web_search_tool import WebSearchTool
 from .runner import Runner
 from .decorators import function_tool
-
-# Import from local agents module
-from agents import trace, gen_trace_id
+from .function_tools import (
+    plan_search_queries, perform_web_search, 
+    synthesize_results, validate_content
+)
+from .deep_research_agent import DeepResearchAgent
 
 __all__ = [
     "Agent",
-    "WebSearchTool", 
-    "trace",
-    "gen_trace_id",
+    "WebSearchTool",
     "Runner",
-    "function_tool"
+    "function_tool",
+    "plan_search_queries",
+    "perform_web_search", 
+    "synthesize_results",
+    "validate_content",
+    "DeepResearchAgent"
 ]

@@ -15,19 +15,19 @@ The Intelligent Research Synthesizer is a sophisticated AI research assistant th
 
 ## 🏗️ Architecture Overview
 
-This project uses a modern **agent-based architecture** with the following components:
+This project uses a modern **function tool architecture** with the following components:
 
-### Core Agents
-- **QueryPlannerAgent**: Plans intelligent search strategies with reasoning
-- **WebSearcherAgent**: Executes web searches using OpenAI's WebSearchTool
-- **SynthesisAgent**: Combines and analyzes search results
-- **OutputGuardrailsAgent**: Validates content for safety and appropriateness
+### Core Function Tools
+- **plan_search_queries**: Plans intelligent search strategies with reasoning
+- **perform_web_search**: Executes web searches using OpenAI's WebSearchTool
+- **synthesize_results**: Combines and analyzes search results
+- **validate_content**: Validates content for safety and appropriateness
 
 ### Key Components
-- **Runner**: Orchestrates agent execution and flow control
+- **Runner**: Orchestrates function tool execution and flow control
 - **Orchestrator**: Manages the complete research workflow
-- **DeepResearchAgent**: Provides the Gradio UI interface
-- **Tracing System**: Built-in tracing for debugging and monitoring
+- **DeepResearchAgent**: Provides the Gradio UI interface with real-time progress
+- **Pydantic Models**: Type-safe data flow between tools
 
 ## 🚀 Quick Start
 
@@ -80,25 +80,21 @@ This project uses a modern **agent-based architecture** with the following compo
 ```
 intelligent-synthesizer-ai/
 ├── main.py                          # Application entry point
-├── agents.py                        # Tracing functionality
 ├── env.example                      # Environment variables template
 ├── pyproject.toml                   # Project dependencies and configuration
 ├── README.md                        # This documentation
 ├── uv.lock                          # Dependency lock file
 ├── models/
 │   ├── __init__.py
-│   └── research_models.py           # Pydantic data models
+│   └── research_models.py           # Pydantic data models (cleaned up)
 └── intelligent_agents/
     ├── __init__.py                  # Package initialization
     ├── agent.py                     # Base Agent class
     ├── decorators.py                # Function decorators (@function_tool, @agent_tool)
-    ├── deep_research_agent.py      # Gradio UI interface
+    ├── deep_research_agent.py      # Gradio UI with real-time progress
     ├── orchestrator.py              # Research workflow orchestration
-    ├── runner.py                    # Agent execution runner
-    ├── query_planner_agent.py       # Query planning agent
-    ├── web_searcher_agent.py        # Web search agent
-    ├── synthesis_agent.py           # Report synthesis agent
-    ├── output_guardrails_agent.py   # Content validation agent
+    ├── runner.py                    # Function tool execution runner
+    ├── function_tools.py            # Function tools with @function_tool decorators
     └── web_search_tool.py           # Web search tool implementation
 ```
 
@@ -194,13 +190,31 @@ The system includes built-in tracing for debugging:
 ## 🔄 Research Process Flow
 
 1. **🚀 Initialization**: System starts and validates API keys
-2. **📋 Query Planning**: AI analyzes your question and creates search strategy
+2. **📋 Query Planning**: Function tool analyzes your question and creates search strategy
 3. **🌐 Web Search 1**: First complementary search with specific focus
 4. **🌐 Web Search 2**: Second search with different angle/approach
-5. **📝 Synthesis**: AI combines and analyzes all search results
-6. **🔍 Validation**: Content is checked for appropriateness
+5. **📝 Synthesis**: Function tool combines and analyzes all search results
+6. **🔍 Validation**: Content is checked for appropriateness using Pydantic models
 7. **📄 Report Generation**: Final structured report is created
-8. **✅ Delivery**: Report is presented with progress logs
+8. **✅ Delivery**: Report is presented with real-time step-by-step progress
+
+## 📊 Real-time Progress System
+
+The system now features a sophisticated real-time progress tracking system:
+
+### Progress Steps
+1. **🚀 Starting research...** (16.7% complete)
+2. **📋 Planning strategy...** (33.3% complete)
+3. **🌐 Performing searches...** (50.0% complete)
+4. **📝 Synthesizing results...** (66.7% complete)
+5. **🔍 Validating content...** (83.3% complete)
+6. **📄 Compiling report...** (100% complete)
+
+### Features
+- **Visual Progress Bar**: Shows completion percentage with step descriptions
+- **Real-time Updates**: Progress updates as each step completes
+- **Step-by-step Logs**: Detailed logs of each operation
+- **Error Handling**: Clear error messages if any step fails
 
 ## 🛠️ Configuration Options
 
@@ -296,11 +310,11 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - **Python 3.13.5+**: Modern Python features
 
 ### Architecture Patterns
-- **Agent-Based Architecture**: Modular, scalable design
-- **Orchestration Pattern**: Centralized workflow management
-- **Decorator Pattern**: Function and method enhancement
-- **Generator Pattern**: Real-time progress updates
-- **Context Manager Pattern**: Resource management and tracing
+- **Function Tool Architecture**: Modular, scalable design with @function_tool decorators
+- **Orchestration Pattern**: Centralized workflow management using Runner.run()
+- **Pydantic Models**: Type-safe data flow and validation
+- **Generator Pattern**: Real-time progress updates with step-by-step tracking
+- **Decorator Pattern**: Function tool enhancement and metadata
 
 ---
 

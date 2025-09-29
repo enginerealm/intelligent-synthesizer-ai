@@ -6,7 +6,6 @@ from pydantic import BaseModel, Field
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
-from agents import trace
 
 load_dotenv()
 
@@ -37,60 +36,58 @@ class WebSearchTool:
     async def search(self, request: SearchRequest) -> List[SearchResult]:
         """
         Perform a web search
-        
+
         Args:
             request: Search request parameters
-            
+
         Returns:
             List of search results
         """
-        with trace("Web Search"):
-            try:
-                
-                # Note: This is a placeholder for the actual WebSearchTool implementation
-                # In practice, you would use OpenAI's WebSearchTool here
-                search_prompt = f"""
-                Search the web for: {request.query}
-                
-                Provide comprehensive information including:
-                - Key findings and insights
-                - Recent developments
-                - Expert opinions
-                - Statistical data if available
-                - Multiple perspectives on the topic
-                
-                Format your response as a detailed research summary.
-                """
-                
-                response = self.client.chat.completions.create(
-                    model="gpt-4",
-                    messages=[
-                        {"role": "system", "content": "You are a web search expert. Provide comprehensive search results."},
-                        {"role": "user", "content": search_prompt}
-                    ],
-                    temperature=0.3
+        try:
+            # Note: This is a placeholder for the actual WebSearchTool implementation
+            # In practice, you would use OpenAI's WebSearchTool here
+            search_prompt = f"""
+            Search the web for: {request.query}
+            
+            Provide comprehensive information including:
+            - Key findings and insights
+            - Recent developments
+            - Expert opinions
+            - Statistical data if available
+            - Multiple perspectives on the topic
+            
+            Format your response as a detailed research summary.
+            """
+            
+            response = self.client.chat.completions.create(
+                model="gpt-4",
+                messages=[
+                    {"role": "system", "content": "You are a web search expert. Provide comprehensive search results."},
+                    {"role": "user", "content": search_prompt}
+                ],
+                temperature=0.3
+            )
+            
+            # Simulate search results (in practice, you'd parse actual web search results)
+            results = [
+                SearchResult(
+                    title=f"Search Result 1 for {request.query}",
+                    url="https://example.com/result1",
+                    snippet=response.choices[0].message.content[:200] + "...",
+                    relevance_score=0.9
+                ),
+                SearchResult(
+                    title=f"Search Result 2 for {request.query}",
+                    url="https://example.com/result2", 
+                    snippet=response.choices[0].message.content[200:400] + "...",
+                    relevance_score=0.8
                 )
-                
-                # Simulate search results (in practice, you'd parse actual web search results)
-                results = [
-                    SearchResult(
-                        title=f"Search Result 1 for {request.query}",
-                        url="https://example.com/result1",
-                        snippet=response.choices[0].message.content[:200] + "...",
-                        relevance_score=0.9
-                    ),
-                    SearchResult(
-                        title=f"Search Result 2 for {request.query}",
-                        url="https://example.com/result2", 
-                        snippet=response.choices[0].message.content[200:400] + "...",
-                        relevance_score=0.8
-                    )
-                ]
-                
-                return results
-                
-            except Exception as e:
-                raise
+            ]
+            
+            return results
+
+        except Exception as e:
+            raise
     
     async def search_multiple(self, queries: List[str]) -> Dict[str, List[SearchResult]]:
         """
@@ -102,14 +99,13 @@ class WebSearchTool:
         Returns:
             Dictionary mapping queries to their results
         """
-        with trace("Multiple Web Searches"):
-            try:
-                results = {}
-                for query in queries:
-                    request = SearchRequest(query=query)
-                    results[query] = await self.search(request)
-                
-                return results
-                
-            except Exception as e:
-                raise
+        try:
+            results = {}
+            for query in queries:
+                request = SearchRequest(query=query)
+                results[query] = await self.search(request)
+            
+            return results
+            
+        except Exception as e:
+            raise
